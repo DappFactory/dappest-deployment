@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: dappest-api
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        role: dappest-api
+    spec:
+      containers:
+      - name: dappest-api
+        image: dappest/backend_api:0.0.22
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+          name: http
+        env:
+        - name: PORT
+          value: "8000"
+        - name: DAPP_STORE_BACKEND_ENV
+          value: "prod"
+        - name: CORS_ORIGIN
+          value: "https://dappest.co,https://www.dappest.co,https://staging.dappest.co"
+        - name: JWT_TOKEN_SECRET
+          value: "/=7/MFV!U{>hVv(7{:UkG@:q);A$7XZ("
+        - name: AWS_ACCESS_KEY_ID
+          value: ""
+        - name: AWS_SECRET_ACCESS_KEY
+          value: ""
+        - name: S3_BUCKET_NAME
+          value: "dappest-logos"
+        - name: S3_BUCKET_PATH
+          value: "https://s3-us-west-2.amazonaws.com/dappest-logos"
+        - name: POSTGRES_HOST
+          value: postgres-service
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_USER
+          value: ""
+        - name: POSTGRES_PASSWORD
+          value: ""
+        - name: POSTGRES_DB
+          value: "devdb"
+        - name: CELERY_BROKER_HOSTNAME
+          value: "guest:guest@rabbitmq-dev-rabbitmq-ha-0.rabbitmq-dev-rabbitmq-ha-discovery.development.svc.cluster.local"
+      imagePullSecrets:
+      - name: dappest-docker-cred

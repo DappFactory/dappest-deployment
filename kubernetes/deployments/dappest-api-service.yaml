@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dappest-api
+  labels:
+    role: dappest-api
+spec:
+  ports:
+  - port: 8000
+    protocol: TCP
+    targetPort: http
+    name: http
+  selector:
+    role: dappest-api
+  type: ClusterIP

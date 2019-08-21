@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: dappest-celery-worker
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        role: dappest-celery-worker
+    spec:
+      containers:
+      - name: dappest-celery-worker
+        image: dappest/backend_worker:0.0.10
+        ports:
+        - containerPort: 5672
+          name: http
+        env:
+        - name: PORT
+          value: "5672"
+        - name: DAPP_STORE_BACKEND_ENV
+          value: "prod"
+        - name: POSTGRES_HOST
+          value: postgres-service
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_USER
+          value: ""
+        - name: POSTGRES_PASSWORD
+          value: ""
+        - name: POSTGRES_DB
+          value: "devdb"
+        - name: CELERY_BROKER_HOSTNAME
+          value: "guest:guest@rabbitmq-dev-rabbitmq-ha-0.rabbitmq-dev-rabbitmq-ha-discovery.development.svc.cluster.local"
+        command: ["/start_worker"]
+      imagePullSecrets:
+      - name: dappest-docker-cred
